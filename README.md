@@ -83,8 +83,8 @@ erDiagram
     }
 
     Billet {
-        type rang
-        type siege
+        type numeroRangee
+        type numeroSiege
         type classe
     }
 
