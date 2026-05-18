@@ -11,7 +11,7 @@
 - L’emprunt ou la copie de code ou de portions de code est interdite
 - Tout constat de plagiat, tricherie ou fraude sera automatiquement déclaré à la Direction et les sanctions prévues seront appliquées
 - L'utilisation de l'IA et de toutes autres sources est considérée comme du plagiat si non documentée en tant que source (Si ce n'est pas dans votre cours, c'est qu'il faut une référence). Par exemple, si vous utilisez une requête trouvée sur StackOverflow, vous devez faire un commentaire dans votre code indiquant que vous avez utilisé cette requête et fournir un lien vers la source. Si vous utilisez une requête générée par une IA, vous devez faire un commentaire dans votre code indiquant que vous avez utilisé une IA pour générer cette requête et fournir le lien de partage de la discussion avec l'IA. 
-- Tout code copié mais documenté comme provenant d'une autre source sera noté à 0 mais ne sera pas considéré comme du plagiat
+- Toute source externe au matériel du cours doit être explicitement documentée ou sera considéré comme du plagiat
 - Vous devez utiliser votre dépôt Git pour faire votre travail : si une situation particulière est détectée, vos commits moduleront votre note dans le groupe et peut même aller jusqu'à un zéro en cas de non participation. (Attention à l'utilisation de 4 mains sur un compte Git !)
 - Durée : 3 x 3 heures + travail à la maison
 - Plate forme : Microsoft SQL Server, GitHub, Visual Studio Code
@@ -70,6 +70,7 @@ erDiagram
     RevisionAvion {
         type date
         type peutVoler
+%% https://fr.wikipedia.org/wiki/Visites_de_maintenance_des_avions
         type type
     }
 
@@ -80,6 +81,7 @@ erDiagram
 
     Voyage {
         type prix
+        type dateAutorisationParentale
     }
 
     Billet {
@@ -93,20 +95,21 @@ erDiagram
         type prenom
         type dateNaissance
         type age
-        type numeroPassport
+        type numeroPasseport
     }
 
     Vol }o--|| Aeroport : arrive
     Vol }o--|| Aeroport : part
-    Vol }o--|| Avion : a
+    OccurrenceVol }o--|| Avion : utilise
+    CompagnieAerienne ||--o{ Vol : propose
     Vol ||--o{ OccurrenceVol : "est réalisé"
 
     Avion }o--|| CompagnieAerienne : appartient
 
-    Billet }o--|| Voyage : "est composé de"
+    Voyage ||--o{ Billet : "est composé de"
     Billet }o--|| OccurrenceVol : "billet pour"
 
-    Voyage }o--|| Passager : achète
+    Passager ||--o{ Voyage : effectue
 
     Aeroport }o--|| Pays : "est domicilié"
 
@@ -117,7 +120,7 @@ erDiagram
 
 Votre analyste vous a indiqué que deux informations ne sont pas forcément renseignées :
 
-- il n'y a pas de numéro de passport pour les vols intérieurs
+- il n'y a pas de numéro de passeport pour les vols intérieurs
 - la date d'autorisation parentale est seulement requise pour les mineurs
 
 Une lecture rapide du diagramme peut se résumer ainsi :
@@ -129,26 +132,26 @@ L'ERD fourni est un point de départ. Vous devez le transformer en modèle relat
 
 ## 3 - À réaliser
 
-- Modifier le fichier `AUTHORS.md` (-10 points si non fait)
+- Modifier le fichier `AUTHORS.md` pour y inscrire les noms complets des deux membres de l’équipe ainsi que le numéro de l'équipier. (-10 points si non fait)
 - Compléter le modèle relationnel à partir de l'ERD fourni (Modifiez ce fichier pour ajouter les éléments demandés dans la section Mermaid ci-dessus) :
   - Ajouter les clefs primaires / étrangères (5 points) (Équipier 1)
   - Déduire les types de données (5 points)  (Équipier 2)
-- Justifier, en commentaires, le type de clefs que vous avez choisi (5 points) (Équipier 1)
+- Justifier, en commentaires dans le fichier de création des tables, le type/colonne de clefs primaires que vous avez choisi (Colonne déjà présente, ajout d'une colonne, utilisation d'un VARCHAR/UNIQUEIDENTIFIER/INT/Composées) (5 points) (Équipier 1)
 - Ajouter des index où cela est approprié (5 points) (Équipier 2)
 - Script SQL permettant d'implanter l'ERD (10 points) (Équipier 1)
 - Créer des données de test (10 points) (Équipier 2) : les données doivent s'adapter à la date de l'exécution du script, c'est-à-dire que les données de test doivent être créées en fonction de la date d'exécution du script. Par exemple, si vous créez une occurrence de vol pour dans 9 jours, elle doit être créée pour la date d'exécution du script + 9 jours. De même, si vous créez une occurrence de vol pour il y a 15 jours, elle doit être créée pour la date d'exécution du script - 15 jours. (Attention à l'utilisation de fonctions de date dans votre script pour que les données soient créées en fonction de la date d'exécution du script)
 - Écrire les requêtes suivantes :
-  1. Afficher l'ensemble des vols disponibles pour chaque compagnie aérienne (5 points)  (Équipier 1)
+  1. Afficher l'ensemble des vols ayant au moins une occurrence future pour chaque compagnie aérienne (5 points)  (Équipier 1)
   2. Afficher les pays par ordre descendant du nombre d'aéroports (5 points) (Équipier 2)
   3. Afficher l'ensemble des vols qui n'ont pas eu d'occurrence depuis plus de 60 jours (5 points) (Équipier 1)
-  4. Afficher le nombre de voyageurs pour une occurrence de vol donnée (5 points) (Équipier 2)
-  5. Afficher les étapes d'un voyage pour un client donné (5 points) (Équipier 1)
+  4. Afficher le nombre de passagers pour une occurrence de vol donnée (5 points) (Équipier 2)
+  5. Afficher les étapes d'un voyage pour un passager donné (5 points) (Équipier 1)
   6. Afficher les étapes de voyage pour un client avec une numérotation des étapes dans l'ordre et l'addition des durées en vol (hors temps de transit) estimées à la fin de l'étape courante (10 points) (Équipier 2)
   7. Afficher le voyage le plus long pour le mois courant. Un voyage est considéré dans le mois courant si son premier billet à une date de départ prévue dans le mois (5 points) (Équipier 1)
-  8. Afficher la liste des voyages pour la journée courante (ie qui débute ou a débuté le voyage et qui fini le voyage aujourd'hui ou va finir le voyage plus tard) (5 points) (Équipier 2)
+  8. Afficher la liste des voyages actifs pendant la journée courante, c’est-à-dire les voyages dont le premier vol a déjà débuté ou débute aujourd’hui, et dont le dernier vol se termine aujourd’hui ou plus tard. (5 points) (Équipier 2)
   9. Afficher le nombre de voyageurs pour la journée courante et un aéroport précis  (5 points) (Équipier 1)
-  10. Afficher les voyages non terminés (ie il peut ne pas avoir débuté) (5 points) (Équipier 2)
-  11. Afficher le nombre de voyageurs ayant un et un seul billet pour un voyage intérieur (Donc une étape) pour une date précise (année, mois et jour) (5 points) (Équipier 1)
+  10. Afficher les voyages dont le dernier vol n’est pas encore terminé, incluant les voyages qui n’ont pas encore débuté. (ie il peut ne pas avoir débuté) (5 points) (Équipier 2)
+  11. Afficher le nombre de voyageurs ayant un et un seul billet pour un voyage intérieur (Donc une étape) pour une date précise (année, mois et jour). Un voyage intérieur est un voyage dont l’aéroport de départ et l’aéroport d’arrivée sont situés dans le même pays. (5 points) (Équipier 1)
 
 Répartition indicative des points :
 
