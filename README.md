@@ -133,7 +133,7 @@ L'ERD fourni est un point de départ. Vous devez le transformer en modèle relat
 ## 3 - À réaliser
 
 - Modifier le fichier `AUTHORS.md` pour y inscrire les noms complets des deux membres de l’équipe ainsi que le numéro de l'équipier. (-10 points si non fait)
-- Compléter le modèle relationnel à partir de l'ERD fourni (Modifiez ce fichier pour ajouter les éléments demandés dans la section Mermaid ci-dessus) :
+- Compléter le modèle relationnel à partir de l'ERD fourni (Copiez la section Mermaid dans le fichier `ERD_COMPLETE.md` pour ajouter les éléments demandés dans la section Mermaid ci-dessus) :
   - Ajouter les clefs primaires / étrangères (5 points) (Équipier 1)
   - Déduire les types de données (5 points)  (Équipier 2)
 - Justifier, en commentaires dans le fichier de création des tables, le type/colonne de clefs primaires que vous avez choisi (Colonne déjà présente, ajout d'une colonne, utilisation d'un VARCHAR/UNIQUEIDENTIFIER/INT/Composées) (5 points) (Équipier 1)
